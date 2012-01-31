@@ -1,103 +1,13 @@
-<script>
+<head>
 
-function hexToRGB(hexString)
-{
-	r = parseInt(hexString.substring(1 , 3) , 16)
-	g = parseInt(hexString.substring(3 , 5) , 16)
-	b = parseInt(hexString.substring(5 , 7) , 16)
+<script src="cylon.js" type="text/javascript"></script>
+<script src="color.js" type="text/javascript"></script>
+<link href="default.css" rel="stylesheet" type="text/css">
 
-	return [r , g , b]
-}
-
-function padZeros(c , length)
-{
-	while(c.length < length)
-	{
-		c = '0' + c
-	}
-
-	return c
-}
-
-function rgbToHex(r , g , b)
-{
-	if(r > 255)
-		r = 255
-
-	rString = r.toString(16)
-	rString = padZeros(rString , 2)
-
-	if(g > 255)
-		g = 255
-	//haha
-	gString = g.toString(16)
-	gString = padZeros(gString , 2)
-
-	if(b > 255)
-		b = 255
-
-	bString = b.toString(16)
-	bString = padZeros(bString , 2)
-
-	return '#' + rString + gString + bString
-}
-
-function changeCanvas(canvas)
-{
-	var c_context = canvas.getContext('2d');
-
-	//c_context.fillStyle = '#ff0000';
-	
-
-	hexList = hexToRGB(c_context.fillStyle)
-
-	if(hexList[0] >= 255)
-	{
-		replaceColor = rgbToHex(0 , 0 , 0)	
-	}
-	else
-	{
-		replaceColor = rgbToHex(hexList[0] + 32 , hexList[1] , hexList[2])
-	}
-
-	c_context.fillStyle = replaceColor
-
-	c_context.fillRect(0, 0, 50, 50);
-}
-
-
-function initializeCanvas(div)
-{
-	alert(div)
-	for(i = 0; i < 255; i++)
-	{
-		var newelement = document.createElement('canvas')
-		var newelement_id = 'canvas_' + i
-		newelement.setAttribute('id' , newelement_id)
-		newelement.setAttribute('onClick' , 'changeCanvas(this)')
-		newelement.setAttribute('width' , '20')
-		newelement.setAttribute('height' , '50')
-		alert(newelement)
-		div.appendChild(newelement)
-	}
-}
-
-function initializeDiv(divParent)
-{
-	var newdiv = document.createElement('div')
-	var newdiv_id = 'div_' + 1
-	newdiv.setAttribute('id' , newdiv_id)
-	document.body.appendChild(newdiv)
-
-	return newdiv
-}
-
-</script>
+</head>
 
 <body>
+<button onclick="add_panel(document.body)">click</button>
 </body>
 
-<script>
-
-</script>
 

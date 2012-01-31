@@ -4,33 +4,6 @@
 
 panel_array = new Array();
 
-function initialize_panel()
-{
-	var panel_id = panel_array.length
-	alert(panel_id)
-
-	var new_panel = document.createElement('div')
-	var new_panel_id = panel_id
-	
-	new_panel.setAttribute('id' , new_panel_id)
-
-	var p = new panel(8 , panel_array.length)
-	alert(p)
-	
-	p.initialize_canvas()
-
-	alert(p.canvas_array.length)
-
-	for(i = 0; i < p.canvas_array.length; i++)
-	{
-		new_panel.appendChild(p.canvas_array[i]);
-		document.body.appendChild(p.canvas_array[i]);
-	
-	}
-
-	return new_panel
-}
-
 function add_panel(panel_parent)
 {
 	var panel_id = panel_array.length
@@ -41,23 +14,29 @@ function add_panel(panel_parent)
 	
 	new_panel.setAttribute('id' , new_panel_id)
 
-	var p = new panel(8 , panel_array.length)
-	alert(p)
-	
-	p.initialize_canvas()
+	var prev_button = document.createElement('button')
+	prev_button.setAttribute('onClick' , "prev_frame_click(this)")
 
-	alert(p.canvas_array.length)
+	new_panel.appendChild(prev_button)
+
+	var p = new panel(16 , panel_array.length)
 
 	for(i = 0; i < p.canvas_array.length; i++)
 	{
 		new_panel.appendChild(p.canvas_array[i])
-		
 		var canvas_context = p.canvas_array[i].getContext('2d')
 		
 		canvas_context.fillStyle = '#000000'
 
-		canvas_context.fillRect(0, 0, 20, 50);
+		canvas_context.fillRect(0, 0, 20, 50)
 	}
+
+	var next_button = document.createElement('button')
+	next_button.setAttribute('onClick' , "next_frame_click(this)")
+
+	new_panel.appendChild(next_button)
+
+	panel_array.push(p)
 	
 	
 }
@@ -70,10 +49,28 @@ function remove_panel(button)
 //Functions that need to be mapped to panel objects
 function canvas_click(canvas)
 {
+	var id = canvas.id
+	var split = id.split("_")
+	var panel_index = parseInt(split[0])
+	var canvas_index = parseInt(split[1])
+
+	panel_array[panel_index].increment_color(canvas_index)
+}
+
+function prev_frame_click(button)
+{
+	var id = button.parentNode.id
+	var panel_index = parseInt(id)
+
+	panel_array[panel_index].prev_frame()
 }
 
 function next_frame_click(button)
 {
+
+	var id = button.parentNode.id
+	var panel_index = parseInt(id)
+	panel_array[panel_index].next_frame()
 }
 
 function remove_frame_click(button)
@@ -82,15 +79,21 @@ function remove_frame_click(button)
 
 
 //Panel Object Functions
-function change_canvas_color(canvas_index)
+function change_canvas_color(canvas_index , new_color)
 {
-	var current_color = this.frame_array[this.current_index][canvas_index]
-
-	//Set new color to current_color + step size
-	var new_color;
-
-	this.canvas_array[canvas_index].setColor(new_color)
+	var canvas_context = this.canvas_array[canvas_index].getContext('2d')
+	canvas_context.fillStyle = new_color
+	canvas_context.fillRect(0, 0, 20, 50);
+	
 	this.frame_array[this.current_index][canvas_index] = new_color
+}
+
+function increment_color(canvas_index)
+{
+
+	var current_color = this.frame_array[this.current_index][canvas_index]
+	var next_color = increment_red(current_color)
+	this.change_canvas_color(canvas_index , next_color)
 }
 
 function initialize_canvas()
@@ -108,6 +111,17 @@ function initialize_canvas()
 	}
 }
 
+function add_frame()
+{
+	var new_frame = new Array()
+
+	for(i = 0; i < this.num_pixels; i++)
+	{
+		new_frame.push('#000000')
+	}
+	this.frame_array.push(new_frame)
+}
+
 function remove_frame()
 {
 	this.frame_array.splice(this.current_index , 1)
@@ -117,10 +131,29 @@ function remove_frame()
 
 function next_frame()
 {
+	
+	
 	this.current_index += 1
-	for(i = 0; i < this.frame_array[this.current_index]; i++)
+	if(this.current_index >= this.frame_array.length)
 	{
-		this.canvas_array[i].setColor(this.frame_array[this.current_index][i])
+		this.add_frame()
+	}
+
+	for(i = 0; i < this.frame_array[this.current_index].length; i++)
+	{
+		this.change_canvas_color(i , this.frame_array[this.current_index][i])
+	}
+}
+
+function prev_frame()
+{
+	if(this.current_index - 1 >= 0)
+	{
+		this.current_index -= 1
+		for(i = 0; i < this.frame_array[this.current_index].length; i ++)
+		{
+			this.change_canvas_color(i , this.frame_array[this.current_index][i])
+		}
 	}
 }
 
@@ -138,5 +171,12 @@ function panel(num_pixels , panel_id)
 
 	this.initialize_canvas = initialize_canvas
 	this.next_frame = next_frame
+	this.prev_frame = prev_frame
 	this.remove_frame = remove_frame
+	this.add_frame = add_frame
+	this.change_canvas_color = change_canvas_color
+	this.increment_color = increment_color
+
+	this.initialize_canvas()
+	this.add_frame()
 }
