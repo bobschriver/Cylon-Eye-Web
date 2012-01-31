@@ -2,4 +2,29 @@ canvas
 {
 	margin-left:2px;
 	margin-right:2px;
+	margin-top:auto;
+	margin-bottom:auto;
+
+	position:relative;
+	float:left;
+}
+
+.canvas_button
+{
+	width:20px;
+	height:50px;
+
+	margin-top:auto;
+	margin-bottom:auto;
+
+	position:relative;
+	float:left;
+}
+
+.panel_div
+{
+	height:50px;
+
+	margin-top:3px;
+	margin-bottom:3px;
 }

@@ -9,13 +9,16 @@ function add_panel(panel_parent)
 	var panel_id = panel_array.length
 
 	var new_panel = document.createElement('div')
+	new_panel.setAttribute('class' , "panel_div")
 	panel_parent.appendChild(new_panel)
 	var new_panel_id = panel_id
 	
 	new_panel.setAttribute('id' , new_panel_id)
 
 	var prev_button = document.createElement('button')
-	prev_button.setAttribute('onClick' , "prev_frame_click(this)")
+	prev_button.innerHTML = "<<"
+	prev_button.setAttribute('class' , "canvas_button")
+	prev_button.setAttribute('onclick' , "prev_frame_click(this)")
 
 	new_panel.appendChild(prev_button)
 
@@ -32,7 +35,9 @@ function add_panel(panel_parent)
 	}
 
 	var next_button = document.createElement('button')
-	next_button.setAttribute('onClick' , "next_frame_click(this)")
+	next_button.innerHTML = ">>"
+	next_button.setAttribute('class' , "canvas_button")
+	next_button.setAttribute('onclick' , "next_frame_click(this)")
 
 	new_panel.appendChild(next_button)
 
@@ -41,6 +46,38 @@ function add_panel(panel_parent)
 	
 }
 
+var stopped = 0
+var play_count = 0
+
+function play_click(button)
+{
+	button.setAttribute('onclick' , "stop(this)")
+	button.innerHTML = "stop"
+
+	stopped = 0
+	play()
+}
+
+function play()
+{
+	if(stopped == 0)
+	{
+		for(var i = 0; i < panel_array.length; i ++)
+		{
+			panel_array[i].next_frame()
+		}
+
+		setTimeout("play()" , 1000)
+	}
+}
+
+function stop(button)
+{
+	stopped = 1
+
+	button.setAttribute('onclick' , "play_click(this)")
+	button.innerHTML = "play"
+}
 
 function remove_panel(button)
 {
@@ -98,7 +135,7 @@ function increment_color(canvas_index)
 
 function initialize_canvas()
 {
-	for(i = 0; i < this.num_pixels; i ++)
+	for(var i = 0; i < this.num_pixels; i ++)
 	{
 		var new_canvas = document.createElement('canvas')
 		var new_canvas_id = this.panel_id + '_' + i
@@ -115,7 +152,7 @@ function add_frame()
 {
 	var new_frame = new Array()
 
-	for(i = 0; i < this.num_pixels; i++)
+	for(var i = 0; i < this.num_pixels; i++)
 	{
 		new_frame.push('#000000')
 	}
@@ -139,7 +176,7 @@ function next_frame()
 		this.add_frame()
 	}
 
-	for(i = 0; i < this.frame_array[this.current_index].length; i++)
+	for(var i = 0; i < this.frame_array[this.current_index].length; i++)
 	{
 		this.change_canvas_color(i , this.frame_array[this.current_index][i])
 	}
