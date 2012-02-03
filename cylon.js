@@ -186,14 +186,15 @@ function add_frame()
 	{
 		new_frame.push('#000000')
 	}
-	this.frame_array.push(new_frame)
+	//this.frame_array.push(new_frame)
+	this.frame_array.splice(this.current_index + 1, 0 , new_frame)
 }
 
 function remove_frame()
 {
 	this.frame_array.splice(this.current_index , 1)
 	this.current_index -= 1
-	this.next_panel()
+	this.next_frame()
 }
 
 function next_frame()
@@ -215,14 +216,18 @@ function next_frame()
 
 function prev_frame()
 {
-	if(this.current_index - 1 >= 0)
+	
+	this.current_index -= 1
+	if(this.current_index < 0)
 	{
-		this.current_index -= 1
-		for(i = 0; i < this.frame_array[this.current_index].length; i ++)
-		{
-			this.change_canvas_color(i , this.frame_array[this.current_index][i])
-		}
+		this.current_index = this.frame_array.length - 1
 	}
+
+	for(i = 0; i < this.frame_array[this.current_index].length; i ++)
+	{
+		this.change_canvas_color(i , this.frame_array[this.current_index][i])
+	}
+	
 }
 
 
