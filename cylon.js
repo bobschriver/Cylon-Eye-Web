@@ -16,6 +16,8 @@ function add_panel(panel_parent)
 	
 	new_panel.setAttribute('id' , new_panel_id)
 
+	var p = new panel(16 , panel_array.length)
+	
 	var add_frame_button = document.createElement('button')
 	add_frame_button.innerHTML = "Add Frame"
 	add_frame_button.setAttribute('class' , "add_frame_button")
@@ -27,10 +29,10 @@ function add_panel(panel_parent)
 	remove_frame_button.setAttribute('class' , "remove_frame_button")
 	remove_frame_button.setAttribute('onclick' , "remove_frame_click(this)")
 	new_panel.appendChild(remove_frame_button)
-	
+
+	new_panel.appendChild(p.duration_input)
 
 	new_panel.appendChild(document.createElement('br'))
-
 
 	var prev_button = document.createElement('button')
 	prev_button.innerHTML = "<<"
@@ -39,7 +41,6 @@ function add_panel(panel_parent)
 
 	new_panel.appendChild(prev_button)
 
-	var p = new panel(16 , panel_array.length)
 
 	for(i = 0; i < p.canvas_array.length; i++)
 	{
@@ -78,14 +79,9 @@ function play_click(button)
 
 function play()
 {
-	if(stopped == 0)
+	for(var i = 0; i < panel_array.length; i ++)
 	{
-		for(var i = 0; i < panel_array.length; i ++)
-		{
-			panel_array[i].next_frame()
-		}
-
-		setTimeout("play()" , 1000)
+		panel_array[i].play_frame()
 	}
 }
 
@@ -97,10 +93,6 @@ function stop(button)
 	button.innerHTML = "play"
 }
 
-function remove_panel(button)
-{
-}
-
 //Functions that need to be mapped to panel objects
 function canvas_click(canvas)
 {
@@ -110,6 +102,15 @@ function canvas_click(canvas)
 	var canvas_index = parseInt(split[1])
 
 	panel_array[panel_index].increment_color(canvas_index)
+}
+
+function duration_input_change(input)
+{
+	var id = input.parentNode.id
+	var panel_index = parseInt(id)
+
+	panel_array[panel_index].duration_change()
+
 }
 
 function prev_frame_click(button)
@@ -163,6 +164,11 @@ function increment_color(canvas_index)
 	this.change_canvas_color(canvas_index , next_color)
 }
 
+function change_duration_input(value)
+{
+	this.duration_input.setAttribute('value' , value)
+}
+
 function initialize_canvas()
 {
 	for(var i = 0; i < this.num_pixels; i ++)
@@ -178,6 +184,29 @@ function initialize_canvas()
 	}
 }
 
+function initialize_input()
+{
+	var new_duration_input = document.createElement('input')
+	new_duration_input.setAttribute('type' , "text")
+	new_duration_input.setAttribute('onchange' , "duration_input_change(this)")
+	new_duration_input.setAttribute('value' , "1")
+
+	this.duration_input = new_duration_input
+}
+
+function play_frame()
+{
+	if(!stopped)
+	{
+		var self = this
+		setTimeout(function()
+		{
+			self.next_frame()
+			self.play_frame()
+		} , this.duration_array[this.current_index] * 1000)
+	}
+}
+
 function add_frame()
 {
 	var new_frame = new Array()
@@ -188,11 +217,14 @@ function add_frame()
 	}
 	//this.frame_array.push(new_frame)
 	this.frame_array.splice(this.current_index + 1, 0 , new_frame)
+	this.duration_array.splice(this.current_index + 1 , 0 , 1)
 }
+
 
 function remove_frame()
 {
 	this.frame_array.splice(this.current_index , 1)
+	this.duration_array.splic(this.curren_index , 1)
 	this.current_index -= 1
 	this.next_frame()
 }
@@ -211,6 +243,8 @@ function next_frame()
 	{
 		this.change_canvas_color(i , this.frame_array[this.current_index][i])
 	}
+
+	this.change_duration_input(this.duration_array[this.current_index])
 	
 }
 
@@ -230,18 +264,25 @@ function prev_frame()
 	
 }
 
+function duration_change()
+{
+	this.duration_array[this.current_index] = parseInt(this.duration_input.value)
+}
+
 
 function panel(num_pixels , panel_id)
 {
 	this.current_index = 0
 	this.num_pixels = num_pixels
 	this.panel_id = panel_id
-
+	
+	this.duration_array = new Array()
 	this.canvas_array = new Array()
 
 	//Frame Array is an array of array of colors that represent the colors of the frames
 	this.frame_array = new Array()
 
+	this.play_frame = play_frame
 	this.initialize_canvas = initialize_canvas
 	this.next_frame = next_frame
 	this.prev_frame = prev_frame
@@ -249,7 +290,11 @@ function panel(num_pixels , panel_id)
 	this.add_frame = add_frame
 	this.change_canvas_color = change_canvas_color
 	this.increment_color = increment_color
+	this.duration_change = duration_change
+	this.initialize_input = initialize_input
+	this.change_duration_input = change_duration_input
 
+	this.initialize_input()
 	this.initialize_canvas()
 	this.add_frame()
 }
