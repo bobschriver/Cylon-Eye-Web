@@ -9,6 +9,24 @@ canvas
 	float:left;
 }
 
+h2
+{
+	text-align:center;
+}
+
+.header
+{
+	width:150px;
+
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.header_button
+{
+	width:70px;
+}
+
 .canvas_button
 {
 	width:20px;
@@ -16,6 +34,9 @@ canvas
 
 	margin-top:auto;
 	margin-bottom:auto;
+	
+	margin-left:2px;
+	margin-right:2px;
 
 	position:relative;
 	float:left;
@@ -23,8 +44,23 @@ canvas
 
 .panel_div
 {
+	
+	width:432px;
 	height:50px;
 
-	margin-top:3px;
-	margin-bottom:3px;
+	padding-top:15px;
+	padding-bottom:15px;
+
+	margin-left:auto;
+	margin-right:auto;
+
+}
+
+body
+{
+	/*width:600px;
+
+	margin-left:auto;
+	margin-right:auto;
+	*/
 }

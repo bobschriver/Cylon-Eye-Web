@@ -4,6 +4,7 @@
 
 panel_array = new Array();
 
+
 function add_panel(panel_parent)
 {
 	var panel_id = panel_array.length
@@ -14,6 +15,22 @@ function add_panel(panel_parent)
 	var new_panel_id = panel_id
 	
 	new_panel.setAttribute('id' , new_panel_id)
+
+	var add_frame_button = document.createElement('button')
+	add_frame_button.innerHTML = "Add Frame"
+	add_frame_button.setAttribute('class' , "add_frame_button")
+	add_frame_button.setAttribute('onclick' , "add_frame_click(this)")
+	new_panel.appendChild(add_frame_button)
+
+	var remove_frame_button = document.createElement('button')
+	remove_frame_button.innerHTML = "Remove Frame"
+	remove_frame_button.setAttribute('class' , "remove_frame_button")
+	remove_frame_button.setAttribute('onclick' , "remove_frame_click(this)")
+	new_panel.appendChild(remove_frame_button)
+	
+
+	new_panel.appendChild(document.createElement('br'))
+
 
 	var prev_button = document.createElement('button')
 	prev_button.innerHTML = "<<"
@@ -40,6 +57,7 @@ function add_panel(panel_parent)
 	next_button.setAttribute('onclick' , "next_frame_click(this)")
 
 	new_panel.appendChild(next_button)
+
 
 	panel_array.push(p)
 	
@@ -110,8 +128,20 @@ function next_frame_click(button)
 	panel_array[panel_index].next_frame()
 }
 
+function add_frame_click(button)
+{
+	var id = button.parentNode.id
+	var panel_index = parseInt(id)
+
+	panel_array[panel_index].add_frame()
+}
+
 function remove_frame_click(button)
 {
+	var id = button.parentNode.id
+	var panel_index = parseInt(id)
+	
+	panel_array[panel_index].remove_frame()
 }
 
 
@@ -173,13 +203,14 @@ function next_frame()
 	this.current_index += 1
 	if(this.current_index >= this.frame_array.length)
 	{
-		this.add_frame()
+		this.current_index = 0
 	}
 
 	for(var i = 0; i < this.frame_array[this.current_index].length; i++)
 	{
 		this.change_canvas_color(i , this.frame_array[this.current_index][i])
 	}
+	
 }
 
 function prev_frame()
