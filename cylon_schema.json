@@ -1,0 +1,30 @@
+{
+	"name":"panel"
+	"properties"
+	{
+		"id":
+		{
+			"type":"number",
+			"description":"Panel identifier",
+			"required":true
+		},
+		"frequency":
+		{
+			"type":"number",
+			"description":"Panel frequency",
+			"required":true
+		},
+		"frames":
+		{
+			"type":"array",
+			"pixels":
+			{
+				"type":"array",
+				"intensity":
+				{
+					"type":"number"
+				}
+			}
+		}
+	}
+}
