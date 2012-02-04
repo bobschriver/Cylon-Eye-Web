@@ -56,6 +56,15 @@ h2
 
 }
 
+
+.frame_button
+{
+	/*width:100px;
+	
+	margin-left:auto;
+	margin-right:auto;
+	*/
+}
 body
 {
 	/*width:600px;
@@ -63,4 +72,9 @@ body
 	margin-left:auto;
 	margin-right:auto;
 	*/
+}
+
+input
+{
+	width:50px;
 }

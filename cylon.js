@@ -17,18 +17,24 @@ function add_panel(panel_parent)
 	new_panel.setAttribute('id' , new_panel_id)
 
 	var p = new panel(16 , panel_array.length)
-	
+
+	new_panel.appendChild(p.frame_label)
+
 	var add_frame_button = document.createElement('button')
 	add_frame_button.innerHTML = "Add Frame"
-	add_frame_button.setAttribute('class' , "add_frame_button")
+	add_frame_button.setAttribute('class' , "frame_button")
 	add_frame_button.setAttribute('onclick' , "add_frame_click(this)")
 	new_panel.appendChild(add_frame_button)
 
 	var remove_frame_button = document.createElement('button')
 	remove_frame_button.innerHTML = "Remove Frame"
-	remove_frame_button.setAttribute('class' , "remove_frame_button")
+	remove_frame_button.setAttribute('class' , "frame_button")
 	remove_frame_button.setAttribute('onclick' , "remove_frame_click(this)")
 	new_panel.appendChild(remove_frame_button)
+
+	var duration_label = document.createElement('label')
+	duration_label.innerHTML = "Duration"
+	new_panel.appendChild(duration_label)
 
 	new_panel.appendChild(p.duration_input)
 
@@ -71,7 +77,7 @@ var play_count = 0
 function play_click(button)
 {
 	button.setAttribute('onclick' , "stop(this)")
-	button.innerHTML = "stop"
+	button.innerHTML = "Stop"
 
 	stopped = 0
 	play()
@@ -90,7 +96,7 @@ function stop(button)
 	stopped = 1
 
 	button.setAttribute('onclick' , "play_click(this)")
-	button.innerHTML = "play"
+	button.innerHTML = "Play"
 }
 
 //Functions that need to be mapped to panel objects
@@ -167,6 +173,12 @@ function increment_color(canvas_index)
 function change_duration_input(value)
 {
 	this.duration_input.setAttribute('value' , value)
+	this.duration_input.value = value
+}
+
+function change_frame_label(index)
+{
+	this.frame_label.innerHTML = "Frame " + (index + 1)
 }
 
 function initialize_canvas()
@@ -192,6 +204,13 @@ function initialize_input()
 	new_duration_input.setAttribute('value' , "1")
 
 	this.duration_input = new_duration_input
+}
+
+function initialize_frame_label()
+{
+	var new_frame_label = document.createElement('label')
+	new_frame_label.innerHTML = "Frame 1"
+	this.frame_label = new_frame_label
 }
 
 function play_frame()
@@ -223,10 +242,13 @@ function add_frame()
 
 function remove_frame()
 {
-	this.frame_array.splice(this.current_index , 1)
-	this.duration_array.splic(this.curren_index , 1)
-	this.current_index -= 1
-	this.next_frame()
+	if(frame_array.length > 1)
+	{
+		this.frame_array.splice(this.current_index , 1)
+		this.duration_array.splice(this.current_index , 1)
+		this.current_index -= 1
+		this.next_frame()
+	}
 }
 
 function next_frame()
@@ -245,7 +267,7 @@ function next_frame()
 	}
 
 	this.change_duration_input(this.duration_array[this.current_index])
-	
+	this.change_frame_label(this.current_index)	
 }
 
 function prev_frame()
@@ -261,6 +283,9 @@ function prev_frame()
 	{
 		this.change_canvas_color(i , this.frame_array[this.current_index][i])
 	}
+
+	this.change_duration_input(this.duration_array[this.current_index])
+	this.change_frame_label(this.current_index)
 	
 }
 
@@ -293,7 +318,10 @@ function panel(num_pixels , panel_id)
 	this.duration_change = duration_change
 	this.initialize_input = initialize_input
 	this.change_duration_input = change_duration_input
+	this.change_frame_label = change_frame_label
+	this.initialize_frame_label = initialize_frame_label
 
+	this.initialize_frame_label()
 	this.initialize_input()
 	this.initialize_canvas()
 	this.add_frame()
