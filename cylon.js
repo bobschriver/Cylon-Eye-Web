@@ -242,7 +242,7 @@ function add_frame()
 
 function remove_frame()
 {
-	if(frame_array.length > 1)
+	if(this.frame_array.length > 1)
 	{
 		this.frame_array.splice(this.current_index , 1)
 		this.duration_array.splice(this.current_index , 1)
