@@ -151,6 +151,14 @@ function remove_frame_click(button)
 	panel_array[panel_index].remove_frame()
 }
 
+function to_json_click()
+{
+	for(var i = 0; i < panel_array.length; i++)
+	{
+		alert(panel_array[i].to_json())
+	}
+}
+
 
 //Panel Object Functions
 function change_canvas_color(canvas_index , new_color)
@@ -294,6 +302,45 @@ function duration_change()
 	this.duration_array[this.current_index] = parseInt(this.duration_input.value)
 }
 
+function frame_to_json(index)
+{
+	var json_string = "\"duration\":\"" + this.duration_array[index] + "\","
+	json_string += "\"pixels\": [ "
+	for(var i = 0; i < this.frame_array[index].length; i ++)
+	{
+		var rgb = hex_to_rgb(this.frame_array[index][i])
+		var intensity = rgb[0] / (255 / 8)
+		json_string += "\"" + intensity + "\""
+		if(i != this.frame_array[index].length - 1) 
+		{
+			json_string += ","
+		}
+	}
+	json_string += " ]"
+
+	return json_string
+}
+
+function to_json()
+{
+	var json_string = "\"id\":\"" + this.id + "\",\n"
+	json_string += "\"frames\":\"\n[\n"
+	for(var i = 0; i < this.frame_array.length; i ++)
+	{
+		json_string += " { " + this.frame_to_json(i) + " } "
+
+		if(i != this.frame_array.length - 1)
+		{
+			json_string += ","
+		}
+
+		json_string +="\n"
+	}
+
+	json_string += "]"
+
+	return json_string
+}
 
 function panel(num_pixels , panel_id)
 {
@@ -320,6 +367,8 @@ function panel(num_pixels , panel_id)
 	this.change_duration_input = change_duration_input
 	this.change_frame_label = change_frame_label
 	this.initialize_frame_label = initialize_frame_label
+	this.to_json = to_json
+	this.frame_to_json = frame_to_json
 
 	this.initialize_frame_label()
 	this.initialize_input()
