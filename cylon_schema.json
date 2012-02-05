@@ -8,19 +8,21 @@
 			"description":"Panel identifier",
 			"required":true
 		},
-		"frequency":
-		{
-			"type":"number",
-			"description":"Panel frequency",
-			"required":true
-		},
 		"frames":
 		{
 			"type":"array",
-			"pixels":
+			"frame":
 			{
-				"type":"array",
-				"intensity":
+				"type":"object" , 
+				"pixels":
+				{
+					"type":"array",
+					"intensity":
+					{
+						"type":"number"
+					}
+				}
+				"duration"
 				{
 					"type":"number"
 				}
