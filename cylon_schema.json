@@ -1,32 +1,33 @@
 {
-	"name":"panel"
-	"properties"
+	"panels"	
 	{
-		"id":
+		"type":"array"
+		"panel"
 		{
-			"type":"number",
-			"description":"Panel identifier",
-			"required":true
-		},
-		"frames":
-		{
-			"type":"array",
-			"frame":
+			"id":
 			{
-				"type":"object" , 
-				"pixels":
+				"type":"number",
+			},
+			"frames":
+			{
+				"type":"array",
+				"frame":
 				{
-					"type":"array",
-					"intensity":
+					"type":"object" , 
+					"pixels":
+					{
+						"type":"array",
+						"intensity":
+						{
+							"type":"number"
+						}
+					}
+					"duration"
 					{
 						"type":"number"
 					}
 				}
-				"duration"
-				{
-					"type":"number"
-				}
-			}
+			}	
 		}
 	}
 }
