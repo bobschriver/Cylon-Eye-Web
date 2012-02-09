@@ -153,10 +153,24 @@ function remove_frame_click(button)
 
 function to_json_click()
 {
+	var json = "{[\n"
 	for(var i = 0; i < panel_array.length; i++)
 	{
-		alert(panel_array[i].to_json())
+		
+		json += "{\n" + panel_array[i].to_json() + "\n}"
+
+		if(i != panel_array.length - 1)
+		{
+			json += " , "
+		}
+
+		json += "\n"
+
 	}
+
+	json += "]}"
+
+	alert(json)
 }
 
 
@@ -186,7 +200,7 @@ function change_duration_input(value)
 
 function change_frame_label(index)
 {
-	this.frame_label.innerHTML = "Frame " + (index + 1)
+	this.frame_label.innerHTML = "Frame " + (index + 1) + " / " + this.frame_array.length
 }
 
 function initialize_canvas()
@@ -228,8 +242,11 @@ function play_frame()
 		var self = this
 		setTimeout(function()
 		{
-			self.next_frame()
-			self.play_frame()
+			if(!stopped)
+			{
+				self.next_frame()
+				self.play_frame()
+			}
 		} , this.duration_array[this.current_index] * 1000)
 	}
 }
@@ -245,6 +262,8 @@ function add_frame()
 	//this.frame_array.push(new_frame)
 	this.frame_array.splice(this.current_index + 1, 0 , new_frame)
 	this.duration_array.splice(this.current_index + 1 , 0 , 1)
+
+	this.change_frame_label(this.current_index)
 }
 
 
@@ -323,7 +342,7 @@ function frame_to_json(index)
 
 function to_json()
 {
-	var json_string = "\"id\":\"" + this.id + "\",\n"
+	var json_string = "\"id\":\"" + this.panel_id + "\",\n"
 	json_string += "\"frames\":\"\n[\n"
 	for(var i = 0; i < this.frame_array.length; i ++)
 	{
